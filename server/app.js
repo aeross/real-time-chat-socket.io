@@ -1,10 +1,12 @@
 const express = require("express");
-const cors = require('cors')
+const cors = require('cors');
+const Controller = require("./controller");
+const ErrorHandler = require("./middlewares/error");
 const app = express();
 const port = 3000;
 
-// ensure no CORS error
 app.use(cors());
+app.use(express.json());
 
 // socket.io setup
 const server = require("http").createServer(app);
@@ -14,10 +16,10 @@ const io = require("socket.io")(server, {
     }
 });
 
+// endpoints
+app.post("/login", Controller.login);
+app.post("/register", Controller.register);
 
-app.get("/", function(req, res) {
-    res.send("Hello world");
-});
 
 // start connection on the server
 io.on("connection", (socket) => {
@@ -31,6 +33,7 @@ io.on("connection", (socket) => {
 })
 
 
+app.use(ErrorHandler.handle)
 server.listen(port, function() {
     console.log(`Listening on port ${port}`);
 });
