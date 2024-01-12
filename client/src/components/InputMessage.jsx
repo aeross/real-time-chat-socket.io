@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 
-function InputMessage({ socket }) {
-    const [msg, setMsg] = useState("");
+function InputMessage({ socket, messageData }) {
+    const { msgs, setMsgs } = messageData;  // the list of messages
+    const [msg, setMsg] = useState("");  // the input field
 
     function handleChange(e) {
         setMsg(e.target.value);
@@ -9,9 +10,16 @@ function InputMessage({ socket }) {
 
     function handleSubmit(e) {
         e.preventDefault();
+        // revert input field into an empty string
         setMsg("");
 
-        socket.emit("message-to-server", msg);
+        // append new message to list of messages
+        const newMsgs = [...msgs];
+        newMsgs.push(msg);
+        setMsgs(newMsgs);
+
+        // send new message to client
+        socket.emit("message-to-server", msg, "room value here");
     }
 
 

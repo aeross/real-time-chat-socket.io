@@ -31,9 +31,17 @@ io.on("connection", (socket) => {
     console.log("user connected", socket.id);
 
     // listen to events sent by a client
-    socket.on("message-to-server", msg => {
-        // broadcast event sent by a client to every other clients
-        socket.broadcast.emit("message-from-server", msg);
+    socket.on("message-to-server", (msg, room) => {
+        // broadcast event sent by a client to every other client in the room
+        if (room === "") {
+            socket.broadcast.emit("message-from-server", "you are not in a room");
+        } else {
+            socket.to(room).emit("message-from-server", msg);
+        }
+    })
+
+    socket.on("join-room", room => {
+        socket.join(room);
     })
 })
 

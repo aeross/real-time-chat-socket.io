@@ -1,23 +1,15 @@
 import { io } from "socket.io-client";
-import InputMessage from "../components/InputMessage";
 import Chat from "../components/Chat";
-import { useNavigate } from "react-router";
 
 function Home() {
     const socket = io("http://localhost:3000");
 
-    // NOTE: every single socket method (e.g., `socket.on`, `socket.emit`)
-    // must not be in this component. This is in order to avoid re-render
-    // on this component, which in turn will re-render the socket id 
-    // connection the client is connected to.
-
-    // Do not put any socket method in this component.
+    socket.emit("join-room", "room value here");
 
     return (
-        <div>
-            <h1>Chat</h1>
+        <div className="px-4 py-6 grid grid-cols-4 gap-2 w-3/4 m-auto min-h-72">
+            <div className="border bg-pink-100 rounded">users list</div>
             <Chat socket={socket} />
-            <InputMessage socket={socket} />
         </div>
     )
 }

@@ -2,22 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router";
 
 function Register() {
-    // check if already logged in
-    const navigate = useNavigate();
-    useEffect(() => {
-        (async () => {
-            const token = localStorage.getItem("token");
-            const res = await fetch("http://localhost:3000/user-info", {
-                headers: { token }
-            });
-
-            if (res.ok) {
-                navigate("/home");
-            }
-        })();
-    }, [])
-
-
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
 
