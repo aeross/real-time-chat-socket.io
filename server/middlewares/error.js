@@ -7,6 +7,8 @@ class ErrorHandler {
     // my errors
     static InvalidNullOrEmpty = "InvalidNullOrEmptyError";
     static InvalidCredentials = "InvalidCredentialsError";
+    static InvalidToken = "InvalidTokenError";
+    static DataNotFound = "DataNotFoundError";
 
     static handle(error, _req, res, _next) {
         console.log(error);
@@ -27,12 +29,22 @@ class ErrorHandler {
         }
 
         // 401
-        if (
-            error.name === ErrorHandler.#JSONWebToken ||
-            error.message === ErrorHandler.InvalidCredentials
-        ) {
+        if (error.message === ErrorHandler.InvalidCredentials) {
             status = 401;
             msg = "invalid credentials";
+        }
+        if (
+            error.name === ErrorHandler.#JSONWebToken || 
+            error.message === ErrorHandler.InvalidToken
+        ) {
+            status = 401;
+            msg = "invalid token";
+        }
+
+        // 404
+        if (error.message === ErrorHandler.DataNotFound) {
+            status = 404;
+            msg = "not found";
         }
 
         res.status(status).json({ message: msg });

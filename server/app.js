@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require('cors');
 const Controller = require("./controller");
 const ErrorHandler = require("./middlewares/error");
+const verifyLogin = require("./middlewares/auth");
 const app = express();
 const port = 3000;
 
@@ -20,6 +21,10 @@ const io = require("socket.io")(server, {
 app.post("/login", Controller.login);
 app.post("/register", Controller.register);
 
+app.get("/users", verifyLogin, Controller.getUsers);
+app.get("/users/:id", verifyLogin, Controller.getUser);
+app.get("/user-info", verifyLogin, Controller.getCurrentUser);
+
 
 // start connection on the server
 io.on("connection", (socket) => {
@@ -33,7 +38,8 @@ io.on("connection", (socket) => {
 })
 
 
-app.use(ErrorHandler.handle)
+app.use(ErrorHandler.handle);
+
 server.listen(port, function() {
     console.log(`Listening on port ${port}`);
 });
