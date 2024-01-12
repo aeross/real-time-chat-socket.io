@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 import InputMessage from "../components/InputMessage";
 import Chat from "../components/Chat";
+import { useNavigate } from "react-router";
 
 function Home() {
     const socket = io("http://localhost:3000");
