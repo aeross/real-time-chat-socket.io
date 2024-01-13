@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 
 function ChatBox({ socket, room, currUser, targetUser }) {
-    console.log(currUser);
-    console.log(targetUser);
-    const [msgs, setMsgs] = useState([]); // the list of messages
-    const [msgSent, setMsgSent] = useState("");  // the input field
+    // the list of messages in the format: { id: [user id], content: [message content] }
+    const [msgs, setMsgs] = useState([]);
+    // the input field
+    const [msgSent, setMsgSent] = useState("");
 
     function handleChange(e) {
         setMsgSent(e.target.value);
