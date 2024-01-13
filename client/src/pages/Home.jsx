@@ -1,5 +1,4 @@
 import { io } from "socket.io-client";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Chat from "../components/Chat";
 

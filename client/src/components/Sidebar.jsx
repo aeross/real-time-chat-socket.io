@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
-function Sidebar({ socket, roomSetup }) {
-    const { room, setRoom } = roomSetup;
+function Sidebar({ socket, setRoom, userSetup }) {
+    const { loggedInUser, setLoggedInUser, users, setUsers, chattingWith, setChattingWith } = userSetup;
 
     // create room name (function params ===> must be user id)
     function createRoom(user1, user2) {
@@ -15,10 +15,6 @@ function Sidebar({ socket, roomSetup }) {
     }
 
     const token = localStorage.getItem("token");
-
-    const [loggedInUser, setLoggedInUser] = useState();
-    const [users, setUsers] = useState();
-    const [chattingWith, setChattingWith] = useState();
 
     useEffect(() => {
         (async () => {
@@ -50,7 +46,9 @@ function Sidebar({ socket, roomSetup }) {
     }, []);
 
     useEffect(() => {
-        setRoom(createRoom(loggedInUser?.userId, chattingWith));
+        const newRoom = createRoom(loggedInUser?.userId, chattingWith);
+        setRoom(newRoom);
+        socket.emit("join-room", newRoom);
     }, [chattingWith])
 
 
