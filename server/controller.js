@@ -8,7 +8,6 @@ class Controller {
     static async register(req, res, next) {
         try {
             const { username, password } = req.body;
-            console.log(username, password);
 
             // create new user
             await User.create({ username, password });

@@ -1,17 +1,22 @@
 import { io } from "socket.io-client";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import Chat from "../components/Chat";
 
 function Home() {
+    const navigate = useNavigate();
     const socket = io("http://localhost:3000");
 
-    socket.emit("join-room", "room value here");
+    return (<>
+        <button className="px-3 py-1 m-2 border rounded bg-slate-100" onClick={() => {
+            localStorage.removeItem("token");
+            navigate("/login");
+        }}>Log out</button>
 
-    return (
         <div className="px-4 py-6 grid grid-cols-4 gap-2 w-3/4 m-auto min-h-72">
-            <div className="border bg-pink-100 rounded">users list</div>
             <Chat socket={socket} />
         </div>
-    )
+    </>)
 }
 
 export default Home

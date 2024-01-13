@@ -38,9 +38,12 @@ io.on("connection", (socket) => {
         } else {
             socket.to(room).emit("message-from-server", msg);
         }
+
+        // socket.broadcast.emit("message-from-server", msg);
     })
 
     socket.on("join-room", room => {
+        console.log(room);
         socket.join(room);
     })
 })
