@@ -20,13 +20,9 @@ function ChatBox({ socket, room }) {
         // send new message to client
         socket.emit("message-to-server", msgSent, room);
     }
-    // console.log(msgs, "<<<< 1");
 
     // receive message broadcasted from server
     socket.on("message-from-server", msgFromServer => {
-        // console.log(msgs, "<<<<< 2");
-        // console.log([...msgs, msgFromServer], "<<<< 3");
-        // console.log("");
         setMsgs([...msgs, msgFromServer]);
     })
 
@@ -34,8 +30,8 @@ function ChatBox({ socket, room }) {
         <div className="col-span-3 h-full flex flex-col">
             <div className="border rounded p-2 flex-1">
                 {msgs?.map((msg, i) => {
-                    return (<div key={i}>
-                        <p>{msg}</p>
+                    return (<div key={i} className="my-2">
+                        <span className="rounded-lg bg-slate-100 px-2 py-1">{msg}</span>
                     </div>)
                 })}
             </div>
