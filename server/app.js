@@ -1,3 +1,5 @@
+const { History } = require("./models/index");
+
 const express = require("express");
 const cors = require('cors');
 const Controller = require("./controller");
@@ -24,6 +26,7 @@ app.post("/register", Controller.register);
 app.get("/users", verifyLogin, Controller.getUsers);
 app.get("/users/:id", verifyLogin, Controller.getUser);
 app.get("/user-info", verifyLogin, Controller.getCurrentUser);
+app.get("/history/:room", verifyLogin, Controller.getChatHistory);
 
 
 // start connection on the server
@@ -36,7 +39,11 @@ io.on("connection", (socket) => {
         if (room === "") {
             socket.broadcast.emit("message-from-server", "you are not in a room");
         } else {
-            socket.to(room).emit("message-from-server", msg);
+            // save chat to history
+            const { id, content } = msg;
+            History.create({ room, senderId: id, content });
+
+            socket.to(room).emit("message-from-server", content);
         }
 
         // socket.broadcast.emit("message-from-server", msg);

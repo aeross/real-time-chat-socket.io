@@ -6,6 +6,23 @@ function ChatBox({ socket, room, currUser, targetUser }) {
     // the input field
     const [msgSent, setMsgSent] = useState("");
 
+    console.log(msgs);
+
+    // fetch chat history
+    useEffect(() => {
+        (async () => {
+            const token = localStorage.getItem("token");
+            const res = await fetch(`http://localhost:3000/history/${room}`, {
+                headers: { token }
+            });
+            const resJson = await res.json();
+
+            if (res.ok) {
+                setMsgs(resJson);
+            }
+        })();
+    }, [room])
+
     function handleChange(e) {
         setMsgSent(e.target.value);
     }
@@ -19,11 +36,16 @@ function ChatBox({ socket, room, currUser, targetUser }) {
         setMsgs([...msgs, { id: currUser, content: msgSent }]);
 
         // send new message to client
-        socket.emit("message-to-server", msgSent, room);
+        socket.emit("message-to-server", {
+            id: currUser,
+            content: msgSent
+        }, room);
     }
 
     // receive message broadcasted from server
     socket.on("message-from-server", msgFromServer => {
+        console.log(msgs);
+        console.log([...msgs, { id: targetUser, content: msgFromServer }]);
         setMsgs([...msgs, { id: targetUser, content: msgFromServer }]);
     })
 
@@ -32,7 +54,7 @@ function ChatBox({ socket, room, currUser, targetUser }) {
             <div className="border rounded p-2 flex-1">
                 {msgs?.map((msg, i) => {
                     return (
-                        <div key={i} className={`${msg.id === currUser ? "text-right" : ""}`}>
+                        <div key={i} className={`my-2 ${msg.id === currUser ? "text-right" : ""}`}>
                             <span className={`rounded-lg px-2 py-1 ${msg.id === currUser ? "bg-pink-100" : " bg-slate-100"}`}>
                                 {msg.content}
                             </span>

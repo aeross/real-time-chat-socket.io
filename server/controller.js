@@ -1,7 +1,7 @@
 const { comparePasswordWithHash } = require("./helpers/bcrypt");
 const { encode } = require("./helpers/jwt");
 const ErrorHandler = require("./middlewares/error");
-const { User } = require("./models/index");
+const { User, History } = require("./models/index");
 const { Op } = require("sequelize");
 
 class Controller {
@@ -80,6 +80,23 @@ class Controller {
             }
 
             return res.status(200).json(user);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async getChatHistory(req, res, next) {
+        try {
+            const room = req.params.room;
+            
+            const chatHistory = await History.findAll({
+                attributes: [["senderId", "id"], "content"],
+                where: { room },
+                order: [["createdAt", "ASC"]]
+            })
+            if (!chatHistory) throw new Error(ErrorHandler.DataNotFound);
+
+            return res.status(200).json(chatHistory);
         } catch (error) {
             next(error);
         }
